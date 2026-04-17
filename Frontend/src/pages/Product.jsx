@@ -12,7 +12,7 @@ function Product() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/products/${id}`)
+      .get(`https://bodywise-react-backend.onrender.com/products/${id}`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.log(err));
   }, [id]);
@@ -47,7 +47,7 @@ function Product() {
   return (
     <div className="details">
       <img
-        src={`http://localhost:3001/uploads/${product.imageUpload}`}
+        src={`https://bodywise-react-backend.onrender.com/uploads/${product.imageUpload}`}
         alt={product.title} className="productimage"/>
       <h2>{product.title}</h2>
       <p className="price">Rs.{product.price}</p>
