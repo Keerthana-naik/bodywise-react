@@ -16,7 +16,7 @@ function OrderPage() {
       return;
     }
 
-    axios.get(`http://localhost:3001/my-orders/${user.email}`)
+    axios.get(`https://bodywise-react-backend.onrender.com/my-orders/${user.email}`)
       .then((res) => {
         console.log("USER ORDERS:", res.data); 
         setOrders(res.data);
