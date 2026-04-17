@@ -12,7 +12,7 @@ function Signup({ closeModal, openLogin }) {
     e.preventDefault();
 
     axios
-      .post("http://localhost:3001/register", { name, email, password })
+      .post("https://bodywise-react-backend.onrender.com/register", { name, email, password })
       .then((result) => {
         console.log(result);
         alert("Signup successful!");

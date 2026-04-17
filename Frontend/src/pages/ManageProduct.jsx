@@ -10,7 +10,7 @@ function ManageProduct() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/products")
+      .get("https://bodywise-react-backend.onrender.com/products")
       .then((response) => {
         setProducts(response.data);
       })
@@ -26,7 +26,7 @@ function ManageProduct() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3001/products/${id}`);
+      await axios.delete(`https://bodywise-react-backend.onrender.com/products/${id}`);
       alert("Product deleted successfully");
       setProducts(products.filter((product) => product._id !== id));
     } catch (error) {
@@ -58,7 +58,7 @@ function ManageProduct() {
           {products.map((product) => (
             <tr key={product._id}>
               <td>
-                <img src={`http://localhost:3001/uploads/${product.imageUpload}`}
+                <img src={`https://bodywise-react-backend.onrender.com/uploads/${product.imageUpload}`}
                  alt={product.title}
                   style={{ width: "100px" }}  />
               </td>

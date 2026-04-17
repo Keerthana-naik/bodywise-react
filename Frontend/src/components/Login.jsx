@@ -30,7 +30,7 @@ function Login({ closeModal }) {
     }
 
     
-    axios.post("http://localhost:3001/login", { email, password })
+    axios.post("https://bodywise-react-backend.onrender.com/login", { email, password })
       .then((result) => {
         console.log("Response:", result.data);
 

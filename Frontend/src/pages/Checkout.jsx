@@ -15,7 +15,7 @@ function Checkout() {
         const updatedCart = await Promise.all(
           cartData.map(async (item) => {
             const res = await axios.get(
-              `http://localhost:3001/products/${item.id}`,
+              `https://bodywise-react-backend.onrender.com/products/${item.id}`,
             );
 
             return {

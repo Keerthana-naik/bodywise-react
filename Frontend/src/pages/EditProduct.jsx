@@ -18,7 +18,7 @@ function EditProduct() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/products/${id}`)
+      .get(`https://bodywise-react-backend.onrender.com/products/${id}`)
       .then((res) => {
         setTitle(res.data.title);
          setCategory(res.data.category);
@@ -41,7 +41,7 @@ function EditProduct() {
     formData.append("rating", rating);
 
     axios
-      .put(`http://localhost:3001/products/${id}`, formData, {
+      .put(`https://bodywise-react-backend.onrender.com/products/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
