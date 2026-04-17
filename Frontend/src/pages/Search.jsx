@@ -15,13 +15,13 @@ function Search() {
   const query = params.get("query");
 
   useEffect(() => {
-    let url = "http://localhost:3001/products";
+    let url = "https://bodywise-react-backend.onrender.com/products";
 
     if (query) {
-      url = `http://localhost:3001/products/search/${query}`;
+      url = `https://bodywise-react-backend.onrender.com/products/search/${query}`;
       setSearchKey(query);
     } else if (category) {
-      url = `http://localhost:3001/products/search/${category}`;
+      url = `https://bodywise-react-backend.onrender.com/products/search/${category}`;
     }
 
     axios  .get(url)
@@ -53,7 +53,7 @@ function Search() {
             onClick={() => navigate(`/product/${item._id}`)}
           >
             <img
-              src={`http://localhost:3001/uploads/${item.imageUpload}`}
+              src={`https://bodywise-react-backend.onrender.com/uploads/${item.imageUpload}`}
               alt={item.title}
             />
                 <h4>{item.title}</h4>
