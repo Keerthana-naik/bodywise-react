@@ -1,62 +1,5 @@
 
 
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-
-
-// function OrderPage() {
-//   const [orders, setOrders] = useState([]);
-
-//   useEffect(() => {
-//     axios.get("http://localhost:3001/orders")
-//       .then((res) => setOrders(res.data))
-//       .catch((err) => console.log(err));
-//   }, []);
-
-//   return (
-//     <div className="order-page">
-//       <div className="order-container">
-//            <h1>Order History</h1>
-//             <h3>Order Details</h3>
-
-//         <div className="order-details">
-//           {orders.length === 0 ? (
-//             <p className="no-orders">No orders found</p>
-//           ) : (
-//             orders.map((order, index) => (
-//         <div key={index} className="order-card">
-                
-//     <div className="order-images">
-//        {order.products &&
-//                     order.products.map((item, i) => (
-//                       <img  key={i} src={`http://localhost:3001/uploads/${item.product.imageUpload}`}
-//                         alt={item.product.title} className="order-image"/> ))}
-//                 </div>
-//         <p> <strong>Product:</strong>{" "}
-//                   {order.product && order.products[0].product.title}
-//                 </p>
-//            <p> <strong>Order ID:</strong> {order._id}
-//                 </p>
-//              <p> <strong>Total:</strong> ₹{order.total}
-//                 </p>
-//                     </div>
-//             ))
-//           )}
-//         </div>
-//             </div>
-//             </div>
-//   );
-// }
-
-// export default OrderPage;
-
-
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -95,26 +38,21 @@ function OrderPage() {
               <p>
                 <strong>Order ID:</strong> {order._id}
               </p>
-
-              <p>
+               <p>
                 <strong>Product:</strong> {order.productName}
               </p>
-
-              <p>
-                <strong>Quantity:</strong> {order.quantity}
-              </p>
-
-              <p>
-                <strong>Total:</strong> ₹{order.total}
-              </p>
-
-              <p>
-                <strong>Status:</strong> {order.status}
-              </p>
-
-              <p>
-                <strong>Payment:</strong> {order.method}
-              </p>
+             <p>
+              <strong>Quantity:</strong> {order.quantity}
+             </p>
+            <p>
+             <strong>Total:</strong> ₹{order.total}
+            </p>
+          <p>
+           <strong>Status:</strong> {order.status}
+           </p>
+                       <p>
+                     <strong>Payment:</strong> {order.method}
+                     </p>
 
               <p>
                 <strong>Phone:</strong> {order.phone}
