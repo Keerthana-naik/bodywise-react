@@ -1,0 +1,37 @@
+
+.address-page {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+
+.address-page input,
+.address-page textarea {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btns button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btns button:first-child {
+  background: #ccc;
+}
+
+.btns button:last-child {
+  background: #1976d2;
+  color: white;
+}

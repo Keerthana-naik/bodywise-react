@@ -1,0 +1,34 @@
+.dashboard{
+    display:flex;
+    flex-direction: column;   
+  margin-top: 60px;
+  text-align: center;
+  padding: 10px;
+  
+  min-height: 100vh;
+  color: black;
+}
+.dashboard-title{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 60px;
+   padding-top: 5px;
+   color:blue;
+}
+.dashboardbuttons{
+    display:flex;
+    gap:20px;
+    justify-content: center;
+}
+.dashbtn{
+background-color:blue;
+  border: 2px solid black;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 30px;
+}

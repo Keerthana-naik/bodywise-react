@@ -1,0 +1,36 @@
+
+table button{
+    background-color: blue;
+    border-radius: 20px;
+    padding:15px;
+    border:none;
+    color:white;
+    cursor:pointer;
+    margin-right: 10px;
+}
+.back-button{
+    background-color: red;
+    border-radius: 20px;
+    padding:10px;
+    position:absolute;
+    left:92%;
+    border:none;
+    color:white;
+    cursor:pointer;
+}
+
+
+.table{
+    width:80%;
+    border-collapse: collapse;
+    margin-top:30px;
+    margin-left: 10%;
+    border:1px solid black;
+}
+th, td {
+  border: 1px solid black; 
+  padding: 5px; 
+  text-align: left; 
+}
+
+

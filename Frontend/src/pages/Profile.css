@@ -1,0 +1,41 @@
+.profilecontainer {
+  padding: 40px;
+  background: #f5f7fb;
+}
+
+.profileheader {
+  background: lightblue;
+  padding: 30px;
+  border-radius: 10px;
+}
+.profileheader h1 {
+  font-size: 32px;
+}
+
+.profileheader p {
+  margin: 5px 0;
+  color: #555;
+}
+.profileheader button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.profileboxes {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.box {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+}
