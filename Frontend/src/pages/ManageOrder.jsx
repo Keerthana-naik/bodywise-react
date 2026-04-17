@@ -7,20 +7,20 @@ function ManageOrder() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/orders")
+      .get("https://bodywise-react-backend.onrender.com/orders")
       .then((res) => setOrders(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const updateStatus = (id, status) => {
     axios
-      .put(`http://localhost:3001/orders/${id}`, { status })
+      .put(`https://bodywise-react-backend.onrender.com/orders/${id}`, { status })
       .then(() => window.location.reload());
   };
 
   const deleteOrder = (id) => {
     axios
-      .delete(`http://localhost:3001/orders/${id}`)
+      .delete(`https://bodywise-react-backend.onrender.com/orders/${id}`)
       .then(() => window.location.reload());
   };
 
