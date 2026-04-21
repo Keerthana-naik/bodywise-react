@@ -25,8 +25,7 @@ function AddProduct() {
     formData.append("quantity", quantity);
     formData.append("rating", rating);
 
-    axios
-      .post("https://bodywise-react-backend.onrender.com/products", formData, {
+    axios.post("http://localhost:3001/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

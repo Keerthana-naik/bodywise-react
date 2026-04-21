@@ -19,7 +19,7 @@ function Category() {
 
    const [products, setProducts] = useState([]);
 
-  useEffect(() => {axios .get(`https://bodywise-react-backend.onrender.com/products/category/${type}`)
+  useEffect(() => {axios .get(`http://localhost:3001/products/category/${type}`)
       .then((res) => {
         setProducts(res.data);
       })
@@ -57,7 +57,7 @@ function Category() {
               onClick={() => navigate(`/product/${product._id}`)}
             >
               <img
-                src={`https://bodywise-react-backend.onrender.com/uploads/${product.imageUpload}`}
+                src={`http://localhost:3001/uploads/${product.imageUpload}`}
                 alt={product.title} style={{ width: "200px" }}/>
               <h3>{product.title}</h3>
                    <p>Price: {product.price}</p>

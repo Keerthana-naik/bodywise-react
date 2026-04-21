@@ -17,7 +17,7 @@ function Cart() {
         const updatedCart = await Promise.all(
           cartData.map(async (item) => {
             const res = await axios.get(
-              `https://bodywise-react-backend.onrender.com/products/${item.id}`,
+              `http://localhost:3001/products/${item.id}`,
             );
 
             return {
@@ -83,7 +83,7 @@ function Cart() {
           <div className="cartcontainer">
             {cart.map((item, index) => (
               <div className="cartcard" key={index}>
-               <img src={`https://bodywise-react-backend.onrender.com/uploads/${item.imageUpload}`}
+               <img src={`http://localhost:3001/uploads/${item.imageUpload}`}
                   alt={item.title} />
 
         <div className="cartdetails">

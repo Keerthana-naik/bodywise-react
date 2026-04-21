@@ -9,8 +9,7 @@ function ManageProduct() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("https://bodywise-react-backend.onrender.com/products")
+    axios.get("http://localhost:3001/products")
       .then((response) => {
         setProducts(response.data);
       })
@@ -26,7 +25,7 @@ function ManageProduct() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`https://bodywise-react-backend.onrender.com/products/${id}`);
+      await axios.delete(`http://localhost:3001/products/${id}`);
       alert("Product deleted successfully");
       setProducts(products.filter((product) => product._id !== id));
     } catch (error) {
@@ -58,7 +57,7 @@ function ManageProduct() {
           {products.map((product) => (
             <tr key={product._id}>
               <td>
-                <img src={`https://bodywise-react-backend.onrender.com/uploads/${product.imageUpload}`}
+                <img src={`http://localhost:3001/uploads/${product.imageUpload}`}
                  alt={product.title}
                   style={{ width: "100px" }}  />
               </td>

@@ -13,8 +13,8 @@ function Home() {
 
   useEffect(() => {
     const url = selectedCategory
-      ? `https://bodywise-react-backend.onrender.com/products/search/${selectedCategory}`
-      : `https://bodywise-react-backend.onrender.com/products`;
+      ? `http://localhost:3001/products/search/${selectedCategory}`
+      : `http://localhost:3001/products`;
 
     axios
       .get(url)
@@ -101,7 +101,7 @@ function Home() {
               onClick={() => navigate(`/product/${product._id}`)}
             >
               <img
-                src={`https://bodywise-react-backend.onrender.com/uploads/${product.imageUpload}`}
+                src={`http://localhost:3001/uploads/${product.imageUpload}`}
                 alt={product.title} style={{ width: "200px" }}/>
               <h3>{product.title}</h3>
                    <p>Price: {product.price}</p>

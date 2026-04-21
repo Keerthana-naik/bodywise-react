@@ -43,7 +43,7 @@ function Payment() {
 
       
       for (let item of cart) {
-        const res = await axios.get(`https://bodywise-react-backend.onrender.com/products/${item.id}` );
+        const res = await axios.get(`http://localhost:3001/products/${item.id}` );
         const product = res.data;
         totalAmount += product.price * item.count;
       }
@@ -51,7 +51,7 @@ function Payment() {
       
       if (method === "cod" || method === "upi") {
         for (let item of cart) {
-          const res = await axios.get( `https://bodywise-react-backend.onrender.com/products/${item.id}` );
+          const res = await axios.get( `http://localhost:3001/products/${item.id}` );
           const product = res.data;
 
           const paymentData = {
@@ -66,7 +66,7 @@ function Payment() {
             email: user?.email,
           };
 
-          await axios.post("https://bodywise-react-backend.onrender.com/payment", paymentData);
+          await axios.post("http://localhost:3001/payment", paymentData);
         }
 
         alert("Order placed successfully");
@@ -77,10 +77,10 @@ function Payment() {
 
   
       if (method === "razorpay") {
-        const orderRes = await axios.post("https://bodywise-react-backend.onrender.com/create-order", { amount: totalAmount } );
+        const orderRes = await axios.post("http://localhost:3001/create-order", { amount: totalAmount } );
 
         const options = {
-          key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
           amount: orderRes.data.amount,
           currency: "INR",
           name: "My Shop",
@@ -90,7 +90,7 @@ function Payment() {
           handler: async function (response) {
             try {
              
-              const verifyRes = await axios.post("https://bodywise-react-backend.onrender.com/verify-payment",
+              const verifyRes = await axios.post("http://localhost:3001/verify-payment",
                 {
                   razorpay_order_id: orderRes.data.id,
                   razorpay_payment_id: response.razorpay_payment_id,
@@ -101,7 +101,7 @@ function Payment() {
               if (verifyRes.data.success) {
              
                 for (let item of cart) {
-                  const res = await axios.get(  `https://bodywise-react-backend.onrender.com/products/${item.id}` );
+                  const res = await axios.get(  `http://localhost:3001/products/${item.id}` );
                   const product = res.data;
 
                   const paymentData = {
@@ -117,7 +117,7 @@ function Payment() {
                   };
 
                   await axios.post(
-                    "https://bodywise-react-backend.onrender.com/payment",
+                    "http://localhost:3001/payment",
                     paymentData
                   );
                 }
