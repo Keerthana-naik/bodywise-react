@@ -83,7 +83,9 @@ function Cart() {
           <div className="cartcontainer">
             {cart.map((item, index) => (
               <div className="cartcard" key={index}>
-               <img src={`http://localhost:3001/uploads/${item.imageUpload}`}
+               <img 
+              //  src={`http://localhost:3001/uploads/${item.imageUpload}`}
+              src={item.productId.imageUpload}
                   alt={item.title} />
 
         <div className="cartdetails">

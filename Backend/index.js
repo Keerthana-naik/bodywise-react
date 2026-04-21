@@ -11,6 +11,27 @@ const crypto = require("crypto");
 
 const Razorpay = require("razorpay");
 
+
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "products",
+  },
+});
+
+// const upload = multer({ storage });
+
 const app=express()
 app.use(express.json())
 app.use(cors())
@@ -70,15 +91,15 @@ const sendOrderEmail = async (email, status, orderId) => {
   await transporter.sendMail(mailOptions);
 };
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/");
+//   },
 
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + "-" + file.originalname);
+//   }
+// });
 
 const upload = multer({ storage: storage });
 
@@ -125,7 +146,7 @@ app.post('/register',(req,res) => {
 //addproduct
 app.post('/products', upload.single("image"), (req,res)=>{
     const productDetail = {
-  imageUpload: req.file.filename,
+  imageUpload: req.file.path,
   title: req.body.title,
   category: req.body.category,
   price: req.body.price,
@@ -161,14 +182,12 @@ app.delete("/products/:id", async (req, res) => {
     }
 
     
-    const imagePath = path.join(__dirname, "uploads", product.imageUpload);
-
-    
-    fs.unlink(imagePath, (err) => {
-      if (err) {
-        console.log("Image not found or already deleted");
-      }
-    });
+    // const imagePath = path.join(__dirname, "uploads", product.imageUpload);
+    // fs.unlink(imagePath, (err) => {
+    //   if (err) {
+    //     console.log("Image not found or already deleted");
+    //   }
+    // });
 
     
     await ProductModel.findByIdAndDelete(req.params.id);
@@ -218,7 +237,7 @@ app.put('/products/:id', upload.single("image"), async(req,res)=>{
         };
 
         if(req.file){
-            updateData.imageUpload = req.file.filename;
+            updateData.imageUpload = req.file.path;
         }
 
         const updated = await ProductModel.findByIdAndUpdate(

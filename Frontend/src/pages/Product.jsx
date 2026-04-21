@@ -45,7 +45,9 @@ function Product() {
   if (!product) return <h2>Loading...</h2>;
   return (
     <div className="details">
-      <img src={`http://localhost:3001/uploads/${product.imageUpload}`}
+      <img 
+      // src={`http://localhost:3001/uploads/${product.imageUpload}`}
+      src={product.imageUpload}
         alt={product.title} className="productimage"/>
       <h2>{product.title}</h2>
       <p className="price">Rs.{product.price}</p>

@@ -101,7 +101,8 @@ function Home() {
               onClick={() => navigate(`/product/${product._id}`)}
             >
               <img
-                src={`http://localhost:3001/uploads/${product.imageUpload}`}
+                // src={`http://localhost:3001/uploads/${product.imageUpload}`}
+                src={product.imageUpload}
                 alt={product.title} style={{ width: "200px" }}/>
               <h3>{product.title}</h3>
                    <p>Price: {product.price}</p>
