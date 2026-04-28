@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
@@ -28,7 +28,9 @@ import Category from "./pages/Category";
 import AdminProtectRoute from "./components/AdminProtectRoute";
 import Profile from "./pages/Profile";
 import Orderpage from "./pages/Orderpage";
-
+import AdminNavbar from "./components/AdminNavbar";
+import Footer from "./components/Footer";
+import { useLocation } from "react-router-dom";
 
 
 
@@ -36,6 +38,21 @@ import Orderpage from "./pages/Orderpage";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+  const location = useLocation();
+
+  const [user, setUser] = useState(
+  JSON.parse(localStorage.getItem("user"))
+);
+
+useEffect(() => {
+  const updateUser = () => {
+    setUser(JSON.parse(localStorage.getItem("user")));
+  };
+
+  window.addEventListener("storage", updateUser);
+
+  return () => window.removeEventListener("storage", updateUser);
+}, []);
 
   const openLogin = () => setShowLogin(true);
   const closeLogin = () => setShowLogin(false);
@@ -43,58 +60,60 @@ function App() {
   const openSignup = () => setShowSignup(true);
   const closeSignup = () => setShowSignup(false);
 
+
+  useEffect(() => {
+  if (location.search.includes("login=true")) {
+    setShowLogin(true);
+  }
+}, [location]);
+
   return (
     <>
-      <Navbar openLogin={openLogin} openSignup={openSignup} />
 
-
-      <Routes>
-  <Route path="/" element={<Home/>}/>
- 
-  <Route path="/BuildKit" element={<BuildKit />} />
-  <Route path="/ShopByCategory" element={<ShopByCategory />} />
-  <Route path="/ShopAll" element={<ShopAll/>}/>
-  <Route path="/HonestReports" element={<HonestReports/>}/>
-
-  <Route element={<AdminProtectRoute />}>
-    <Route path="/Dashboard" element={<Dashboard />} />
-    <Route path="/AddProduct" element={<AddProduct />} />
-    <Route path="/ManageProduct" element={<ManageProduct />} />
-    <Route path="/EditProduct/:id" element={<EditProduct />} />
-    <Route path="/ManageOrder" element={<ManageOrder />} />
-  </Route>
-
-  <Route path="/Product/:id" element={<Product />} />
-  <Route path="/Cart" element={<Cart/>} />
-  <Route path="/checkout" element={<Checkout />} />
-  <Route path="/payment" element={<Payment />} />
-  <Route path="/address" element={<Address />} /> 
-  <Route path="/Search" element={<Search/>}/>
-  <Route path="/category/:type" element={<Category />} />
-  <Route path="/Profile" element={<Profile/>}/>
-  <Route path="/Orderpage" element={<Orderpage/>}/>
-</Routes>
-      
-  
-
-      {showLogin && <Login closeModal={closeLogin} />}
-      {showSignup && (
-  <Signup 
-    closeModal={closeSignup} 
-    openLogin={() => {
-      setShowSignup(false);
-      setShowLogin(true);
-    }}
-  />
+{user?.isAdmin ? (
+  <AdminNavbar setUser={setUser} />
+) : (
+  <Navbar openLogin={openLogin} openSignup={openSignup} />
 )}
-    
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/BuildKit" element={<BuildKit />} />
+        <Route path="/ShopByCategory" element={<ShopByCategory />} />
+        <Route path="/ShopAll" element={<ShopAll />} />
+        <Route path="/HonestReports" element={<HonestReports />} />
+
+        <Route element={<AdminProtectRoute />}>
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/AddProduct" element={<AddProduct />} />
+          <Route path="/ManageProduct" element={<ManageProduct />} />
+          <Route path="/EditProduct/:id" element={<EditProduct />} />
+          <Route path="/ManageOrder" element={<ManageOrder />} />
+        </Route>
+
+        <Route path="/Product/:id" element={<Product />} />
+        <Route path="/Cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/address" element={<Address />} />
+
+        <Route path="/Search" element={<Search />} />
+        <Route path="/category/:type" element={<Category />} />
+        <Route path="/Profile" element={<Profile />} />
+        <Route path="/Orderpage" element={<Orderpage />} />
+      </Routes>
+      {(!user || !user.isAdmin) && <Footer />}
+      {showLogin && <Login closeModal={closeLogin} setUser={setUser} />}
+      {showSignup && (
+        <Signup
+          closeModal={closeSignup}
+          openLogin={() => {
+            setShowSignup(false);
+            setShowLogin(true);
+          }}
+        />
+      )}
     </>
   );
-
-  
 }
 
 export default App;
-
-
-

@@ -8,6 +8,7 @@ const OrderModel = require("./models/Orders");
 const nodemailer=require("nodemailer")
 require("dotenv").config();
 const crypto = require("crypto");
+const CartModel = require("./models/Cart");
 
 const Razorpay = require("razorpay");
 
@@ -256,6 +257,155 @@ app.put('/products/:id', upload.single("image"), async(req,res)=>{
 })
 
 
+
+
+// app.post("/cart", async (req, res) => {
+//   try {
+//     const { userId, productId } = req.body;
+
+//     // 🔍 Check if product already in cart
+//     const existingItem = await CartModel.findOne({
+//       userId,
+//       productId,
+//     });
+
+//     if (existingItem) {
+//       existingItem.count += 1;
+//       await existingItem.save();
+//       return res.json(existingItem);
+//     }
+
+//     // 🆕 Add new item
+//     const newItem = new CartModel({
+//       userId,
+//       productId,
+//       count: 1,
+//     });
+
+//     await newItem.save();
+//     res.json(newItem);
+
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
+
+app.post("/cart", async (req, res) => {
+  try {
+    const { userId, productId, count } = req.body;
+
+    const existingItem = await CartModel.findOne({
+      userId,
+      productId,
+    });
+
+    if (existingItem) {
+      existingItem.count += count; 
+      await existingItem.save();
+      return res.json(existingItem);
+    }
+
+    const newItem = new CartModel({
+      userId,
+      productId,
+      count,
+    });
+
+    await newItem.save();
+    res.json(newItem);
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// app.get("/cart/:userId", async (req, res) => {
+//   try {
+   
+//     const cart = await CartModel.find({ userId: req.params.userId })
+//   .populate("productId");
+
+//     console.log("CART:", cart);
+//     res.json(cart);
+
+//   } catch (err) {
+//     console.log("ERROR:", err);
+//     res.status(500).json(err);
+//   }
+// });
+
+app.get("/cart/:userId", async (req, res) => {
+  try {
+    const cart = await CartModel.find({
+      userId: req.params.userId,
+    }).populate("productId");
+
+    res.json(cart);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//update cart quantity
+// app.put("/cart/:id", async (req, res) => {
+//   try {
+//     const updated = await CartModel.findByIdAndUpdate(
+//       req.params.id,
+//       { count: req.body.count },
+//       { new: true }
+//     );
+
+//     res.json(updated);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
+
+app.put("/cart/:id", async (req, res) => {
+  try {
+    const updated = await CartModel.findByIdAndUpdate(
+      req.params.id,
+      { count: req.body.count },
+      { new: true }
+    ).populate("productId");
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//delete one item
+app.delete("/cart/:id", async (req, res) => {
+  try {
+    await CartModel.findByIdAndDelete(req.params.id);
+    res.json({ message: "Item removed" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//delete cart item
+// app.delete("/cart/user/:userId", async (req, res) => {
+//   try {
+//     await CartModel.deleteMany({ userId: req.params.userId });
+//     res.json({ message: "Cart cleared successfully" });
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
+//clear full cart
+app.delete("/cart/user/:userId", async (req, res) => {
+  try {
+    await CartModel.deleteMany({ userId: req.params.userId });
+    res.json({ message: "Cart cleared" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 //order api
 app.post("/payment", async (req, res) => {

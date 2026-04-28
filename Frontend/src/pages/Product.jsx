@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -10,45 +12,69 @@ function Product() {
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState(1);
 
+  
   useEffect(() => {
-    axios.get(`http://localhost:3001/products/${id}`)
+    axios .get(`http://localhost:3001/products/${id}`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.log(err));
   }, [id]);
 
+
   const increaseQty = () => setQty(qty + 1);
   const decreaseQty = () => qty > 1 && setQty(qty - 1);
 
-  const addProduct = () => {
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+  
+  const addProduct = async () => {
+    const userId = localStorage.getItem("userId");
 
-    const productId = String(product._id || product.id);
-
-    const existingItemIndex = existingCart.findIndex(
-      (item) => String(item.id) === productId,
-    );
-
-    if (existingItemIndex !== -1) {
-      existingCart[existingItemIndex].count += qty;
-    } else {
-      existingCart.push({ id: productId, count: qty });
+    if (!userId) {
+      alert("Please login first");
+      return;
     }
 
-    localStorage.setItem("cart", JSON.stringify(existingCart));
+    try {
+      await axios.post("http://localhost:3001/cart", {
+        userId: userId,
+        productId: product._id,
+        count: qty, 
+      });
 
-    console.log(existingCart);
-
-    alert("Added to cart");
-    navigate("/Cart");
+      alert("Added to cart ");
+      navigate("/Cart");
+    } catch (err) {
+      console.log(err);
+      alert("Error adding to cart");
+    }
   };
 
+  const buyNow = () => {
+  const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    alert("Please login first");
+    return;
+  }
+
+  const buyNowItem = {
+    productId: product,
+    count: qty,
+  };
+
+  localStorage.setItem("buyNow", JSON.stringify([buyNowItem]));
+
+  navigate("/checkout");
+};
+
+  
+
   if (!product) return <h2>Loading...</h2>;
+
   return (
     <div className="details">
-      <img 
-      // src={`http://localhost:3001/uploads/${product.imageUpload}`}
-      src={product.imageUpload}
-        alt={product.title} className="productimage"/>
+      <img src={product.imageUpload}
+        alt={product.title}
+        className="productimage"  />
+
       <h2>{product.title}</h2>
       <p className="price">Rs.{product.price}</p>
       <p>Rating {product.rating}</p>
@@ -56,15 +82,20 @@ function Product() {
       <div className="quantity">
         <button onClick={decreaseQty}>-</button>
         <span>{qty}</span>
-
         <button onClick={increaseQty}>+</button>
       </div>
+
       <div className="btns">
         <button className="addcart" onClick={addProduct}>
           Add to Cart
         </button>
+
+        <button className="buynow" onClick={buyNow}>
+  Buy Now
+</button>
       </div>
     </div>
   );
 }
+
 export default Product;

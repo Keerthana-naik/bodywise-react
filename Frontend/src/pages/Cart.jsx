@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -7,26 +9,21 @@ import { useNavigate } from "react-router-dom";
 function Cart() {
   const [cart, setCart] = useState([]);
 
-  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    const cartData = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const fetchProducts = async () => {
+    const fetchCart = async () => {
       try {
-        const updatedCart = await Promise.all(
-          cartData.map(async (item) => {
-            const res = await axios.get(
-              `http://localhost:3001/products/${item.id}`,
-            );
-
-            return {
-              ...res.data,
-              count: item.count,
-              id: item.id,
-            };
-          }),
+        const res = await axios.get(
+          `http://localhost:3001/cart/${userId}`
         );
+
+        
+        const updatedCart = res.data.map((item) => ({
+          ...item.productId, 
+          count: item.count,
+          cartId: item._id, 
+        }));
 
         setCart(updatedCart);
       } catch (err) {
@@ -34,42 +31,71 @@ function Cart() {
       }
     };
 
-    fetchProducts();
+    fetchCart();
   }, []);
 
-  const updateLocalStorage = (updatedCart) => {
-    setCart(updatedCart);
+  
+  const removeItem = async (index) => {
+    const item = cart[index];
 
-    const simplifiedCart = updatedCart.map((item) => ({
-      id: item.id,
-      count: item.count,
-    }));
+    try {
+      await axios.delete( `http://localhost:3001/cart/${item.cartId}`
+  );
 
-    localStorage.setItem("cart", JSON.stringify(simplifiedCart));
+      const updatedCart = cart.filter((_, i) => i !== index);
+      setCart(updatedCart);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const removeItem = (index) => {
-    const updatedCart = cart.filter((_, i) => i !== index);
-    updateLocalStorage(updatedCart);
+  
+  const increaseQty = async (index) => {
+    const item = cart[index];
+
+    try {
+      const res = await axios.put( `http://localhost:3001/cart/${item.cartId}`,
+        {
+          count: item.count + 1,
+        }
+      );
+
+      const updatedCart = cart.map((c, i) =>
+        i === index ? { ...c, count: res.data.count } : c
+      );
+
+      setCart(updatedCart);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const increaseQty = (index) => {
-    const updatedCart = cart.map((item, i) =>
-      i === index ? { ...item, count: item.count + 1 } : item,
-    );
-    updateLocalStorage(updatedCart);
+
+  const decreaseQty = async (index) => {
+    const item = cart[index];
+    if (item.count <= 1) return;
+
+    try {
+      const res = await axios.put(  `http://localhost:3001/cart/${item.cartId}`,
+        {
+          count: item.count - 1,
+        }
+      );
+
+      const updatedCart = cart.map((c, i) =>
+        i === index ? { ...c, count: res.data.count } : c
+      );
+
+      setCart(updatedCart);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-         const decreaseQty = (index) => {
-          const updatedCart = cart.map((item, i) =>
-      i === index && item.count > 1 ? { ...item, count: item.count - 1 } : item,
-    );
-    updateLocalStorage(updatedCart);
-  };
 
-           const totalPrice = cart.reduce(
+  const totalPrice = cart.reduce(
     (total, item) => total + Number(item.price) * item.count,
-    0,
+    0
   );
 
   return (
@@ -83,26 +109,30 @@ function Cart() {
           <div className="cartcontainer">
             {cart.map((item, index) => (
               <div className="cartcard" key={index}>
-               <img 
-              //  src={`http://localhost:3001/uploads/${item.imageUpload}`}
-              src={item.productId.imageUpload}
-                  alt={item.title} />
+                <img src={item.imageUpload} alt={item.title} />
 
-        <div className="cartdetails">
-         <h3>{item.title}</h3>
-         <p>Price: ₹{item.price}</p>
+                <div className="cartdetails">
+                  <h3>{item.title}</h3>
+                  <p>Price: ₹{item.price}</p>
 
-           <div className="qty">
-            <button onClick={() => decreaseQty(index)}>-</button>
-              <span>{item.count}</span>
-             <button onClick={() => increaseQty(index)}>+</button>
-            </div>
+                  <div className="qty">
+                    <button onClick={() => decreaseQty(index)}>
+                      -
+                    </button>
+                    <span>{item.count}</span>
+                    <button onClick={() => increaseQty(index)}>
+                      +
+                    </button>
+                  </div>
 
-               <button className="removebtn"
-                    onClick={() => removeItem(index)} > Remove
+                  <button
+                    className="removebtn"
+                    onClick={() => removeItem(index)}
+                  >
+                    Remove
                   </button>
-                    </div>
-                    </div>
+                </div>
+              </div>
             ))}
           </div>
 
@@ -110,9 +140,11 @@ function Cart() {
             <h3>Total: ₹{totalPrice}</h3>
 
             <Link to="/checkout">
-              <button className="checkout-btn">Proceed to Checkout</button>
+              <button className="checkout-btn">
+                Proceed to Checkout
+              </button>
             </Link>
-              </div>
+          </div>
         </>
       )}
     </div>

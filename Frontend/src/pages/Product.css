@@ -53,20 +53,21 @@
   display: flex;
   gap: 15px;
   margin-top: 20px;
+  justify-content: center;   
 }
 
+
 .addcart {
-  background-color: black;
-  color: white;
-  border: none;
-  cursor: pointer;
+  background-color:#007bff!important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
   border-radius: 8px;
   width: 150px;
   height: 45px;
   font-size: 15px;
   transition: 0.3s;
 }
-
 .addcart:hover {
   background-color: #333;
 }
@@ -78,4 +79,19 @@
   align-items: center;
   justify-content: center;
   padding: 40px;
+}
+.buynow {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 150px;
+  height: 45px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.buynow:hover {
+  background-color: #0056b3;
 }

@@ -79,15 +79,18 @@
 }
 
 
+
+
 .summary-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;   /* 🔥 MAIN FIX */
+  align-items: flex-start;
+  gap: 4px;
   margin: 10px 0;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #e3f2fd;
   color: #333;
 }
-
 
 .checkout-summary h2 {
   margin-top: 20px;

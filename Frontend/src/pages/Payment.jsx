@@ -8,12 +8,36 @@ import { useNavigate } from "react-router-dom";
 function Payment() {
   const [method, setMethod] = useState("");
   const [upiId, setUpiId] = useState("");
+  const [cart, setCart] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user"));
-    const address = JSON.parse(localStorage.getItem("address"));
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const address = JSON.parse(localStorage.getItem("address"));
 
   const navigate = useNavigate();
+
+  
+  useEffect(() => {
+    const buyNowData = JSON.parse(localStorage.getItem("buyNow"));
+
+
+    if (buyNowData) {
+      setCart(buyNowData);
+      return;
+    }
+
+    
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) return;
+
+    axios
+      .get(`http://localhost:3001/cart/${userId}`)
+      .then((res) => {
+        setCart(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
 
   useEffect(() => {
     if (!user) {
@@ -23,7 +47,7 @@ function Payment() {
   }, []);
 
   const handlePayment = async () => {
-        if (!method) {
+    if (!method) {
       alert("Please select payment method");
       return;
     }
@@ -41,18 +65,15 @@ function Payment() {
     try {
       let totalAmount = 0;
 
-      
       for (let item of cart) {
-        const res = await axios.get(`http://localhost:3001/products/${item.id}` );
-        const product = res.data;
+        const product = item.productId;
         totalAmount += product.price * item.count;
       }
 
-      
+     
       if (method === "cod" || method === "upi") {
         for (let item of cart) {
-          const res = await axios.get( `http://localhost:3001/products/${item.id}` );
-          const product = res.data;
+          const product = item.productId;
 
           const paymentData = {
             productId: product._id,
@@ -70,14 +91,24 @@ function Payment() {
         }
 
         alert("Order placed successfully");
-        localStorage.removeItem("cart");
+
+        await axios.delete(
+          `http://localhost:3001/cart/user/${localStorage.getItem("userId")}`
+        );
+
+        
+        localStorage.removeItem("buyNow");
+
         localStorage.removeItem("address");
         navigate("/");
       }
 
-  
+      
       if (method === "razorpay") {
-        const orderRes = await axios.post("http://localhost:3001/create-order", { amount: totalAmount } );
+        const orderRes = await axios.post(
+          "http://localhost:3001/create-order",
+          { amount: totalAmount }
+        );
 
         const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -89,8 +120,8 @@ function Payment() {
 
           handler: async function (response) {
             try {
-             
-              const verifyRes = await axios.post("http://localhost:3001/verify-payment",
+              const verifyRes = await axios.post(
+                "http://localhost:3001/verify-payment",
                 {
                   razorpay_order_id: orderRes.data.id,
                   razorpay_payment_id: response.razorpay_payment_id,
@@ -99,10 +130,8 @@ function Payment() {
               );
 
               if (verifyRes.data.success) {
-             
                 for (let item of cart) {
-                  const res = await axios.get(  `http://localhost:3001/products/${item.id}` );
-                  const product = res.data;
+                  const product = item.productId;
 
                   const paymentData = {
                     productId: product._id,
@@ -122,12 +151,19 @@ function Payment() {
                   );
                 }
 
-                alert("Payment Successful & Verified ");
-                localStorage.removeItem("cart");
+                alert("Payment Successful & Verified");
+
+                await axios.delete(
+                  `http://localhost:3001/cart/user/${localStorage.getItem("userId")}`
+                );
+
+                // ✅ CLEAR BUY NOW
+                localStorage.removeItem("buyNow");
+
                 localStorage.removeItem("address");
                 navigate("/");
               } else {
-                alert("Payment verification failed ");
+                alert("Payment verification failed");
               }
             } catch (err) {
               console.log(err);
@@ -163,41 +199,58 @@ function Payment() {
       {address ? (
         <div className="address-box">
           <p>{address.name}</p>
-             <p>{address.address}</p>
-                <p>{address.city}</p>
-                  <p>{address.pincode}</p>
+          <p>{address.address}</p>
+          <p>{address.city}</p>
+          <p>{address.pincode}</p>
         </div>
       ) : (
         <p>No address found</p>
       )}
 
       <div className="paymentoption">
-            <input type="radio"name="payment"
-              value="cod"onChange={(e) => setMethod(e.target.value)}/>
-      <label>Cash on Delivery</label>
+        <input
+          type="radio"
+          name="payment"
+          value="cod"
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        <label>Cash on Delivery</label>
       </div>
 
       <div className="paymentoption">
-            <input type="radio" name="payment"
-            value="razorpay" onChange={(e) => setMethod(e.target.value)}/>
-       <label>Razorpay (Card / UPI / NetBanking)</label>
+        <input
+          type="radio"
+          name="payment"
+          value="razorpay"
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        <label>Razorpay</label>
       </div>
 
       <div className="paymentoption">
-           <input type="radio"name="payment"
-             value="upi" onChange={(e) => setMethod(e.target.value)}/>
-       <label>UPI</label>
+        <input
+          type="radio"
+          name="payment"
+          value="upi"
+          onChange={(e) => setMethod(e.target.value)}
+        />
+        <label>UPI</label>
       </div>
 
       {method === "upi" && (
-        <input type="text" placeholder="Enter UPI ID"
-            value={upiId} onChange={(e) => setUpiId(e.target.value)} className="upiinput"/>
+        <input
+          type="text"
+          placeholder="Enter UPI ID"
+          value={upiId}
+          onChange={(e) => setUpiId(e.target.value)}
+          className="upiinput"
+        />
       )}
 
       <button className="paybutton" onClick={handlePayment}>
         Place Order
-          </button>
-        </div>
+      </button>
+    </div>
   );
 }
 

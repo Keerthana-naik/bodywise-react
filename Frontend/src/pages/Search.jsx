@@ -53,7 +53,8 @@ function Search() {
             onClick={() => navigate(`/product/${item._id}`)}
           >
             <img
-              src={`http://localhost:3001/uploads/${item.imageUpload}`}
+              // src={`http://localhost:3001/uploads/${item.imageUpload}`}
+              src={product.imageUpload}
               alt={item.title}
             />
                 <h4>{item.title}</h4>

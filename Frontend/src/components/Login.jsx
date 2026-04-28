@@ -1,11 +1,9 @@
-
-
 import "./auth.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 
-function Login({ closeModal }) {
+function Login({ closeModal, setUser }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,35 +11,39 @@ function Login({ closeModal }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
- 
     if (email === "admin@gmail.com" && password === "admin") {
 
-     
-      localStorage.setItem("user", JSON.stringify({
-  name: "Admin",
-  email: email,
-  isAdmin: true,
-}));
-        
-      navigate("/dashboard");
-      closeModal();
-      return;
-    }
+      const adminUser = {
+        name: "Admin",
+        email: email,
+        isAdmin: true,
+      };
 
-    
+      localStorage.setItem("user", JSON.stringify(adminUser));
+      localStorage.setItem("userId", "admin");
+
+      setUser(adminUser); 
+
+      closeModal();
+      navigate("/dashboard");
+
+      return; 
+    }
     axios.post("http://localhost:3001/login", { email, password })
       .then((result) => {
         console.log("Response:", result.data);
 
-        
         if (result.data && result.data.email) {
 
-          
-          localStorage.setItem("user", JSON.stringify({
-  ...result.data,
-  isAdmin: false
-}));
+          const normalUser = {
+            ...result.data,
+            isAdmin: false
+          };
+
+          localStorage.setItem("user", JSON.stringify(normalUser));
+          localStorage.setItem("userId", result.data._id);
+
+          setUser(normalUser); 
 
           closeModal();
           navigate("/");
@@ -51,7 +53,10 @@ function Login({ closeModal }) {
           alert("No record found");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        alert("Login failed");
+      });
   };
 
   return (
@@ -66,13 +71,22 @@ function Login({ closeModal }) {
 
         <form onSubmit={handleSubmit}>
           <label>Email</label>
-          <input type="email" placeholder="Enter your email"required 
+          <input
+            type="email"
+            placeholder="Enter your email"
+            required
             value={email}
-            onChange={(e) => setEmail(e.target.value)} />
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
           <label>Password</label>
-          <input type="password" placeholder="Enter your password"
-            required value={password}onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            placeholder="Enter your password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <button type="submit" className="primary-btn">
             Login

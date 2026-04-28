@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import "./auth.css";
 import axios from "axios";
@@ -8,23 +9,29 @@ function Signup({ closeModal, openLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    axios
-      .post("http://localhost:3001/register", { name, email, password })
-      .then((result) => {
-        console.log(result);
-        alert("Signup successful!");
-        localStorage.setItem("user", JSON.stringify({ email }));
-        closeModal();
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Signup failed");
-      });
-  };
+  const handleSubmit = (e) => {
+  e.preventDefault();
+
+  axios.post("http://localhost:3001/register", { name, email, password })
+    .then((result) => {
+      console.log(result);
+
+      alert("Signup successful!");
+
+      
+      localStorage.setItem("user", JSON.stringify(result.data));
+      localStorage.setItem("userId", result.data._id);
+     
+
+      closeModal();
+      navigate("/");
+    })
+    .catch((err) => {
+      console.log(err);
+      alert("Signup failed");
+    });
+};
   const navigate = useNavigate();
   return (
     <div className="modal">
@@ -38,18 +45,15 @@ function Signup({ closeModal, openLogin }) {
 
         <form onSubmit={handleSubmit}>
           <label>Name</label>
-          <input
-            type="text"  placeholder="Enter your name" required
+          <input type="text"  placeholder="Enter your name" required
             onChange={(e) => setName(e.target.value)} />
 
           <label>Email</label>
-          <input
-            type="email"placeholder="Enter your email" required 
+          <input type="email"placeholder="Enter your email" required 
             onChange={(e) => setEmail(e.target.value)} />
 
           <label>Password</label>
-          <input
-            type="password" placeholder="Enter your password"
+          <input type="password" placeholder="Enter your password"
             required onChange={(e) => setPassword(e.target.value)}/>
 
           <button type="submit" className="primary-btn">
@@ -69,3 +73,4 @@ function Signup({ closeModal, openLogin }) {
 }
 
 export default Signup;
+
