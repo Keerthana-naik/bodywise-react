@@ -1,28 +1,18 @@
+
+
+
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa";
 import { HiOutlineShoppingCart } from "react-icons/hi";
-import { useState, useEffect } from "react";
 
-function Navbar({ openLogin, openSignup }) {
+function Navbar({ openLogin, openSignup, user, setUser }) {
   const navigate = useNavigate();
 
- 
-  const [user, setUser] = useState( JSON.parse(localStorage.getItem("user")));
-
-  useEffect(() => {
-  const handleStorageChange = () => {
-    setUser(JSON.parse(localStorage.getItem("user")));
-  };
-
-  window.addEventListener("storage", handleStorageChange);
-
-  return () => window.removeEventListener("storage", handleStorageChange);
-}, []);
-
-  
   const handleLogout = () => {
+     localStorage.setItem("justLoggedOut", "true");
+
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
 
@@ -36,12 +26,13 @@ function Navbar({ openLogin, openSignup }) {
         
         <div className="logo">
           <img
-            src="/logo.png" alt="Logo" onClick={() => navigate("/")}
+            src="/logo.png"
+            alt="Logo"
+            onClick={() => navigate("/")}
             style={{ cursor: "pointer" }}
           />
         </div>
 
-       
         <ul className="nav-links">
           <li>
             <Link to="/BuildKit">Build Your Own Kit</Link>
@@ -75,7 +66,7 @@ function Navbar({ openLogin, openSignup }) {
             <Link to="/HonestReports">Honest Reports</Link>
           </li>
 
-         
+          
           {!user ? (
             <>
               <li onClick={openLogin} style={{ cursor: "pointer" }}>
@@ -93,16 +84,13 @@ function Navbar({ openLogin, openSignup }) {
           )}
         </ul>
 
-    
         <div className="nav-icons">
           <FiSearch
-            className="search-icon"
             onClick={() => navigate("/search")}
             style={{ cursor: "pointer", fontSize: "20px" }}
           />
 
           <FaRegUser
-            className="user-icon"
             onClick={() => navigate("/Profile")}
             style={{ cursor: "pointer", fontSize: "20px" }}
           />

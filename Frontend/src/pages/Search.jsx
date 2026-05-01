@@ -54,7 +54,8 @@ function Search() {
           >
             <img
               // src={`http://localhost:3001/uploads/${item.imageUpload}`}
-              src={product.imageUpload}
+              
+               src={item.imageUpload}
               alt={item.title}
             />
                 <h4>{item.title}</h4>

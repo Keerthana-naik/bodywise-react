@@ -35,10 +35,10 @@ return (
              <button onClick={handleLogout}>Logout</button> 
         </div>
         <div className="profileboxes">
-            <div className="box">Account</div>
+            
             <div className="box" onClick={() => navigate("/Orderpage")}>Order</div>
             <div className="box">Address</div>
-           < div className="box">Wallet</div>
+      
 
         </div>
          <Footer/>

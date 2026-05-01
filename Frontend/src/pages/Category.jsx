@@ -42,6 +42,12 @@ function Category() {
           <div className="card">
             <img className="slide" src="/hairslide3.png" alt="slide3" />
           </div>
+ <div className="card">
+            <img className="slide" src="/hairslide4.png" alt="slide4" />
+          </div>
+<div className="card">
+            <img className="slide" src="/hairslide5.png" alt="slide5" />
+          </div>
 
           
            </Carousel>

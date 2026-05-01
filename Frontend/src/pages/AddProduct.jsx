@@ -81,6 +81,8 @@ function AddProduct() {
                     <option value="bodycare">BODYCARE</option>
                        <option value="face">FACE</option>
                          <option value="sunprotection">SUN PROTECTION</option>
+
+                          <option value="healthandfitness">HEALTH AND FITNESS</option>
                  </select>
           </div>
 

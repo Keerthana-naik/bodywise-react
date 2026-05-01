@@ -31,7 +31,7 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// const upload = multer({ storage });
+
 
 const app=express()
 app.use(express.json())
@@ -45,8 +45,6 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-// mongoose.connect(process.env.MONGO_URI);
-// mongoose.connect("mongodb://localhost:27017/user" );
 mongoose
 .connect(process.env.MONGO_URI)
 .then(()=>console.log("MongoDB connected successfully"))
@@ -92,15 +90,7 @@ const sendOrderEmail = async (email, status, orderId) => {
   await transporter.sendMail(mailOptions);
 };
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/");
-//   },
 
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + "-" + file.originalname);
-//   }
-// });
 
 const upload = multer({ storage: storage });
 
@@ -182,14 +172,7 @@ app.delete("/products/:id", async (req, res) => {
       return res.json("Product not found");
     }
 
-    
-    // const imagePath = path.join(__dirname, "uploads", product.imageUpload);
-    // fs.unlink(imagePath, (err) => {
-    //   if (err) {
-    //     console.log("Image not found or already deleted");
-    //   }
-    // });
-
+  
     
     await ProductModel.findByIdAndDelete(req.params.id);
 
@@ -259,36 +242,6 @@ app.put('/products/:id', upload.single("image"), async(req,res)=>{
 
 
 
-// app.post("/cart", async (req, res) => {
-//   try {
-//     const { userId, productId } = req.body;
-
-//     // 🔍 Check if product already in cart
-//     const existingItem = await CartModel.findOne({
-//       userId,
-//       productId,
-//     });
-
-//     if (existingItem) {
-//       existingItem.count += 1;
-//       await existingItem.save();
-//       return res.json(existingItem);
-//     }
-
-//     // 🆕 Add new item
-//     const newItem = new CartModel({
-//       userId,
-//       productId,
-//       count: 1,
-//     });
-
-//     await newItem.save();
-//     res.json(newItem);
-
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
 
 
 app.post("/cart", async (req, res) => {
@@ -320,20 +273,6 @@ app.post("/cart", async (req, res) => {
   }
 });
 
-// app.get("/cart/:userId", async (req, res) => {
-//   try {
-   
-//     const cart = await CartModel.find({ userId: req.params.userId })
-//   .populate("productId");
-
-//     console.log("CART:", cart);
-//     res.json(cart);
-
-//   } catch (err) {
-//     console.log("ERROR:", err);
-//     res.status(500).json(err);
-//   }
-// });
 
 app.get("/cart/:userId", async (req, res) => {
   try {
@@ -347,20 +286,7 @@ app.get("/cart/:userId", async (req, res) => {
   }
 });
 
-//update cart quantity
-// app.put("/cart/:id", async (req, res) => {
-//   try {
-//     const updated = await CartModel.findByIdAndUpdate(
-//       req.params.id,
-//       { count: req.body.count },
-//       { new: true }
-//     );
 
-//     res.json(updated);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
 
 
 app.put("/cart/:id", async (req, res) => {
@@ -387,15 +313,6 @@ app.delete("/cart/:id", async (req, res) => {
   }
 });
 
-//delete cart item
-// app.delete("/cart/user/:userId", async (req, res) => {
-//   try {
-//     await CartModel.deleteMany({ userId: req.params.userId });
-//     res.json({ message: "Cart cleared successfully" });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
 
 //clear full cart
 app.delete("/cart/user/:userId", async (req, res) => {
@@ -406,6 +323,10 @@ app.delete("/cart/user/:userId", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+
+
 
 //order api
 app.post("/payment", async (req, res) => {
@@ -596,6 +517,99 @@ app.get("/my-orders/:email", (req, res) => {
     .then(data => res.json(data))
     .catch(err => res.status(500).json(err));
 });
+
+
+//admin dashboard
+app.get("/api/admin/dashboard", async (req, res) => {
+  try {
+
+    const users = await UserModel.find();
+    const orders = await OrderModel.find();
+
+    const totalUsers = users.length;
+    const totalOrders = orders.length;
+
+    let totalSales = 0;
+    let totalPayments = 0;
+
+    const salesMap = {};
+    const signupMap = {};
+    const paymentMap = {};
+
+    orders.forEach(order => {
+
+      const amount = order.total || 0;
+
+     
+      totalSales += amount;
+
+      if (order.paymentId) {
+        totalPayments += amount;
+      }
+
+      const date = new Date(order.createdAt).toLocaleDateString();
+
+      if (!salesMap[date]) {
+        salesMap[date] = 0;
+      }
+      salesMap[date] += amount;
+
+     
+      if (order.paymentId) {
+        if (!paymentMap[date]) {
+          paymentMap[date] = 0;
+        }
+        paymentMap[date] += amount;
+      }
+
+    });
+
+    users.forEach(user => {
+      const date = new Date(user.createdAt).toLocaleDateString();
+
+      if (!signupMap[date]) {
+        signupMap[date] = 0;
+      }
+
+      signupMap[date] += 1;
+    });
+
+    
+
+    const salesData = Object.keys(salesMap).map(date => ({
+      date,
+      amount: salesMap[date]
+    }));
+
+    const signupData = Object.keys(signupMap).map(date => ({
+      date,
+      users: signupMap[date]
+    }));
+
+    const paymentData = Object.keys(paymentMap).map(date => ({
+      date,
+      amount: paymentMap[date]
+    }));
+
+
+   
+    res.json({
+      totalUsers,
+      totalOrders,
+      totalSales,
+      totalPayments,
+      salesData,
+      signupData,
+      paymentData
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 
 

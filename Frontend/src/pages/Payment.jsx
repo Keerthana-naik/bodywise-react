@@ -30,8 +30,7 @@ function Payment() {
 
     if (!userId) return;
 
-    axios
-      .get(`http://localhost:3001/cart/${userId}`)
+    axios .get(`http://localhost:3001/cart/${userId}`)
       .then((res) => {
         setCart(res.data);
       })
@@ -145,8 +144,7 @@ function Payment() {
                     email: user?.email,
                   };
 
-                  await axios.post(
-                    "http://localhost:3001/payment",
+                  await axios.post( "http://localhost:3001/payment",
                     paymentData
                   );
                 }
@@ -157,7 +155,7 @@ function Payment() {
                   `http://localhost:3001/cart/user/${localStorage.getItem("userId")}`
                 );
 
-                // ✅ CLEAR BUY NOW
+              
                 localStorage.removeItem("buyNow");
 
                 localStorage.removeItem("address");

@@ -1,58 +1,49 @@
 
-import { useState, useEffect} from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
 
+import { useState, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import AdminNavbar from "./components/AdminNavbar";
 
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
-
 import Home from "./pages/Home";
 import BuildKit from "./pages/BuildKit";
-import ShopByCategory from "./pages/ShopByCategory";
 import ShopAll from "./pages/ShopAll";
 import HonestReports from "./pages/HonestReports";
 import AddProduct from "./pages/AddProduct";
 import Dashboard from "./pages/Dashboard";
 import ManageProduct from "./pages/ManageProduct";
-import EditProduct from"./pages/EditProduct";
-import Product from"./pages/Product";
-import Cart from"./pages/Cart";
+import EditProduct from "./pages/EditProduct";
+import Product from "./pages/Product";
+import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Address from "./pages/Address";
 import Payment from "./pages/Payment";
 import ManageOrder from "./pages/ManageOrder";
 import Search from "./pages/Search";
 import Category from "./pages/Category";
-import AdminProtectRoute from "./components/AdminProtectRoute";
 import Profile from "./pages/Profile";
 import Orderpage from "./pages/Orderpage";
-import AdminNavbar from "./components/AdminNavbar";
-import Footer from "./components/Footer";
-import { useLocation } from "react-router-dom";
-
-
-
+import AdminProtectRoute from "./components/AdminProtectRoute";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const location = useLocation();
 
-  const [user, setUser] = useState(
-  JSON.parse(localStorage.getItem("user"))
-);
+  
+  const [user, setUser] = useState(null);
 
-useEffect(() => {
-  const updateUser = () => {
-    setUser(JSON.parse(localStorage.getItem("user")));
-  };
-
-  window.addEventListener("storage", updateUser);
-
-  return () => window.removeEventListener("storage", updateUser);
-}, []);
+  
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const openLogin = () => setShowLogin(true);
   const closeLogin = () => setShowLogin(false);
@@ -60,25 +51,29 @@ useEffect(() => {
   const openSignup = () => setShowSignup(true);
   const closeSignup = () => setShowSignup(false);
 
-
   useEffect(() => {
-  if (location.search.includes("login=true")) {
-    setShowLogin(true);
-  }
-}, [location]);
+    if (location.search.includes("login=true")) {
+      setShowLogin(true);
+    }
+  }, [location]);
 
   return (
     <>
+      
+      {user?.isAdmin ? (
+        <AdminNavbar setUser={setUser} />
+      ) : (
+        <Navbar
+          openLogin={openLogin}
+          openSignup={openSignup}
+          user={user}
+          setUser={setUser}
+        />
+      )}
 
-{user?.isAdmin ? (
-  <AdminNavbar setUser={setUser} />
-) : (
-  <Navbar openLogin={openLogin} openSignup={openSignup} />
-)}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/BuildKit" element={<BuildKit />} />
-        <Route path="/ShopByCategory" element={<ShopByCategory />} />
         <Route path="/ShopAll" element={<ShopAll />} />
         <Route path="/HonestReports" element={<HonestReports />} />
 
@@ -101,8 +96,9 @@ useEffect(() => {
         <Route path="/Profile" element={<Profile />} />
         <Route path="/Orderpage" element={<Orderpage />} />
       </Routes>
-      {(!user || !user.isAdmin) && <Footer />}
+
       {showLogin && <Login closeModal={closeLogin} setUser={setUser} />}
+
       {showSignup && (
         <Signup
           closeModal={closeSignup}

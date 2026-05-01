@@ -1,15 +1,24 @@
+
+
 import { Navigate, Outlet } from "react-router-dom";
 
 function AdminProtectRoute() {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  
-  if (!user || user.isAdmin !== true) {
+  const justLoggedOut = localStorage.getItem("justLoggedOut");
+
+  if (!user?.isAdmin) {
+
+    if (justLoggedOut === "true") {
+      localStorage.removeItem("justLoggedOut"); 
+      return <Navigate to="/" />;
+    }
+
+    
     alert("Access Denied! Admins only.");
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" />;
   }
 
-  
   return <Outlet />;
 }
 
