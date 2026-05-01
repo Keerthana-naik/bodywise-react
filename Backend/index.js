@@ -665,7 +665,12 @@ const storage = new CloudinaryStorage({
 
 const app=express()
 app.use(express.json())
-app.use(cors())
+// app.use(cors())
+app.use(cors({
+  origin: "https://bodywise-react-frontend.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use('/uploads', express.static('uploads'))
 
 
