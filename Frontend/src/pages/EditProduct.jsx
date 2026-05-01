@@ -17,7 +17,7 @@ function EditProduct() {
   const [rating, setRating] = useState("");
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_uRL}/products/${id}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/products/${id}`)
       .then((res) => {
         setTitle(res.data.title);
          setCategory(res.data.category);
@@ -39,7 +39,7 @@ function EditProduct() {
     formData.append("quantity", quantity);
     formData.append("rating", rating);
 
-    axios .put(`${import.meta.env.VITE_API_uRL}/products/${id}`, formData, {
+    axios .put(`${import.meta.env.VITE_API_URL}/products/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

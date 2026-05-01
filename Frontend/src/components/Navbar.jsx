@@ -62,9 +62,7 @@ function Navbar({ openLogin, openSignup, user, setUser }) {
             <Link to="/ShopAll">Shop All</Link>
           </li>
 
-          <li>
-            <Link to="/HonestReports">Honest Reports</Link>
-          </li>
+          
 
           
           {!user ? (

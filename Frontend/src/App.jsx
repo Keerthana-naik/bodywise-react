@@ -12,7 +12,7 @@ import Signup from "./components/Signup";
 import Home from "./pages/Home";
 import BuildKit from "./pages/BuildKit";
 import ShopAll from "./pages/ShopAll";
-import HonestReports from "./pages/HonestReports";
+
 import AddProduct from "./pages/AddProduct";
 import Dashboard from "./pages/Dashboard";
 import ManageProduct from "./pages/ManageProduct";
@@ -75,7 +75,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/BuildKit" element={<BuildKit />} />
         <Route path="/ShopAll" element={<ShopAll />} />
-        <Route path="/HonestReports" element={<HonestReports />} />
+        
 
         <Route element={<AdminProtectRoute />}>
           <Route path="/Dashboard" element={<Dashboard />} />

@@ -24,7 +24,7 @@ function Checkout() {
 
     if (!userId) return;
 
-    axios.get(`${import.meta.env.VITE_API_uRL}/cart/${userId}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/cart/${userId}`)
       .then((res) => {
         setCart(res.data);
       })

@@ -30,7 +30,7 @@ function Payment() {
 
     if (!userId) return;
 
-    axios .get(`${import.meta.env.VITE_API_uRL}/cart/${userId}`)
+    axios .get(`${import.meta.env.VITE_API_URL}/cart/${userId}`)
       .then((res) => {
         setCart(res.data);
       })
@@ -86,13 +86,13 @@ function Payment() {
             email: user?.email,
           };
 
-          await axios.post(`${import.meta.env.VITE_API_uRL}/payment`, paymentData);
+          await axios.post(`${import.meta.env.VITE_API_URL}/payment`, paymentData);
         }
 
         alert("Order placed successfully");
 
         await axios.delete(
-          `${import.meta.env.VITE_API_uRL}/cart/user/${localStorage.getItem("userId")}`
+          `${import.meta.env.VITE_API_URL}/cart/user/${localStorage.getItem("userId")}`
         );
 
         
@@ -105,7 +105,7 @@ function Payment() {
       
       if (method === "razorpay") {
         const orderRes = await axios.post(
-          `${import.meta.env.VITE_API_uRL}/create-order`,
+          `${import.meta.env.VITE_API_URL}/create-order`,
           { amount: totalAmount }
         );
 
@@ -120,7 +120,7 @@ function Payment() {
           handler: async function (response) {
             try {
               const verifyRes = await axios.post(
-                `${import.meta.env.VITE_API_uRL}/verify-payment`,
+                `${import.meta.env.VITE_API_URL}/verify-payment`,
                 {
                   razorpay_order_id: orderRes.data.id,
                   razorpay_payment_id: response.razorpay_payment_id,
@@ -144,7 +144,7 @@ function Payment() {
                     email: user?.email,
                   };
 
-                  await axios.post( "${import.meta.env.VITE_API_uRL}/payment",
+                  await axios.post( "${import.meta.env.VITE_API_URL}/payment",
                     paymentData
                   );
                 }
@@ -152,7 +152,7 @@ function Payment() {
                 alert("Payment Successful & Verified");
 
                 await axios.delete(
-                  `${import.meta.env.VITE_API_uRL}/cart/user/${localStorage.getItem("userId")}`
+                  `${import.meta.env.VITE_API_URL}/cart/user/${localStorage.getItem("userId")}`
                 );
 
               

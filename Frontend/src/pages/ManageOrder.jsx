@@ -6,19 +6,19 @@ function ManageOrder() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_uRL}/orders`)
+    axios.get(`${import.meta.env.VITE_API_URL}/orders`)
       .then((res) => setOrders(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const updateStatus = (id, status) => {
-    axios .put(`${import.meta.env.VITE_API_uRL}/orders/${id}`, { status })
+    axios .put(`${import.meta.env.VITE_API_URL}/orders/${id}`, { status })
       .then(() => window.location.reload());
   };
 
   const deleteOrder = (id) => {
     axios
-      .delete(`${import.meta.env.VITE_API_uRL}/orders/${id}`)
+      .delete(`${import.meta.env.VITE_API_URL}/orders/${id}`)
       .then(() => window.location.reload());
   };
 

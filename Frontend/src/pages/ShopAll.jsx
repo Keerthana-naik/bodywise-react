@@ -27,8 +27,8 @@ function ShopAll() {
 
   useEffect(() => {
     const url = selectedCategory === "all"
-        ? `${import.meta.env.VITE_API_uRL}/products`
-        : `${import.meta.env.VITE_API_uRL}/products/search/${selectedCategory}`;
+        ? `${import.meta.env.VITE_API_URL}/products`
+        : `${import.meta.env.VITE_API_URL}/products/search/${selectedCategory}`;
 
 
     axios
