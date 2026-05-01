@@ -15,13 +15,13 @@ function Search() {
   const query = params.get("query");
 
   useEffect(() => {
-    let url = "http://localhost:3001/products";
+    let url = `${import.meta.env.VITE_API_uRL}/products`;
 
     if (query) {
-      url = `http://localhost:3001/products/search/${query}`;
+      url = `${import.meta.env.VITE_API_uRL}/products/search/${query}`;
       setSearchKey(query);
     } else if (category) {
-      url = `http://localhost:3001/products/search/${category}`;
+      url = `${import.meta.env.VITE_API_uRL}/products/search/${category}`;
     }
 
     axios  .get(url)

@@ -19,7 +19,7 @@ function Category() {
 
    const [products, setProducts] = useState([]);
 
-  useEffect(() => {axios .get(`http://localhost:3001/products/category/${type}`)
+  useEffect(() => {axios .get(`${import.meta.env.VITE_API_uRL}/products/category/${type}`)
       .then((res) => {
         setProducts(res.data);
       })

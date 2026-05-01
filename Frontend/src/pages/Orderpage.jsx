@@ -16,7 +16,7 @@ function OrderPage() {
       return;
     }
 
-    axios.get(`http://localhost:3001/my-orders/${user.email}`)
+    axios.get(`${import.meta.env.VITE_API_uRL}/my-orders/${user.email}`)
       .then((res) => {
         console.log("USER ORDERS:", res.data); 
         setOrders(res.data);

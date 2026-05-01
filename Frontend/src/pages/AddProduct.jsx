@@ -25,7 +25,7 @@ function AddProduct() {
     formData.append("quantity", quantity);
     formData.append("rating", rating);
 
-    axios.post("http://localhost:3001/products", formData, {
+    axios.post(`${import.meta.env.VITE_API_uRL}/products`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

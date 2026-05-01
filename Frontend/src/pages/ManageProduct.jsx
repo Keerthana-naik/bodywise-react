@@ -9,7 +9,7 @@ function ManageProduct() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:3001/products")
+    axios.get(`${import.meta.env.VITE_API_uRL}/products`)
       .then((response) => {
         setProducts(response.data);
       })
@@ -25,7 +25,7 @@ function ManageProduct() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3001/products/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_uRL}/products/${id}`);
       alert("Product deleted successfully");
       setProducts(products.filter((product) => product._id !== id));
     } catch (error) {

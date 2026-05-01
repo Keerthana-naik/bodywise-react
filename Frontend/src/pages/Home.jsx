@@ -13,8 +13,8 @@ function Home() {
 
   useEffect(() => {
     const url = selectedCategory
-      ? `http://localhost:3001/products/search/${selectedCategory}`
-      : `http://localhost:3001/products`;
+      ? `${import.meta.env.VITE_API_uRL}/products/search/${selectedCategory}`
+      : `${import.meta.env.VITE_API_uRL}/products`;
 
     axios
       .get(url)

@@ -14,7 +14,7 @@ function Product() {
 
   
   useEffect(() => {
-    axios .get(`http://localhost:3001/products/${id}`)
+    axios .get(`${import.meta.env.VITE_API_uRL}/products/${id}`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.log(err));
   }, [id]);
@@ -33,7 +33,7 @@ function Product() {
     }
 
     try {
-      await axios.post("http://localhost:3001/cart", {
+      await axios.post(`${import.meta.env.VITE_API_uRL}/cart`, {
         userId: userId,
         productId: product._id,
         count: qty, 

@@ -14,9 +14,7 @@ function Cart() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:3001/cart/${userId}`
-        );
+        const res = await axios.get(  `${import.meta.env.VITE_API_uRL}/cart/${userId}` );
 
         
         const updatedCart = res.data.map((item) => ({
@@ -39,7 +37,7 @@ function Cart() {
     const item = cart[index];
 
     try {
-      await axios.delete( `http://localhost:3001/cart/${item.cartId}`
+      await axios.delete( `${import.meta.env.VITE_API_uRL}/cart/${item.cartId}`
   );
 
       const updatedCart = cart.filter((_, i) => i !== index);
@@ -54,7 +52,7 @@ function Cart() {
     const item = cart[index];
 
     try {
-      const res = await axios.put( `http://localhost:3001/cart/${item.cartId}`,
+      const res = await axios.put( `${import.meta.env.VITE_API_uRL}/cart/${item.cartId}`,
         {
           count: item.count + 1,
         }
@@ -76,7 +74,7 @@ function Cart() {
     if (item.count <= 1) return;
 
     try {
-      const res = await axios.put(  `http://localhost:3001/cart/${item.cartId}`,
+      const res = await axios.put(  `${import.meta.env.VITE_API_uRL}/cart/${item.cartId}`,
         {
           count: item.count - 1,
         }

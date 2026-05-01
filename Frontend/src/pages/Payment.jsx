@@ -30,7 +30,7 @@ function Payment() {
 
     if (!userId) return;
 
-    axios .get(`http://localhost:3001/cart/${userId}`)
+    axios .get(`${import.meta.env.VITE_API_uRL}/cart/${userId}`)
       .then((res) => {
         setCart(res.data);
       })
@@ -86,13 +86,13 @@ function Payment() {
             email: user?.email,
           };
 
-          await axios.post("http://localhost:3001/payment", paymentData);
+          await axios.post(`${import.meta.env.VITE_API_uRL}/payment`, paymentData);
         }
 
         alert("Order placed successfully");
 
         await axios.delete(
-          `http://localhost:3001/cart/user/${localStorage.getItem("userId")}`
+          `${import.meta.env.VITE_API_uRL}/cart/user/${localStorage.getItem("userId")}`
         );
 
         
@@ -105,7 +105,7 @@ function Payment() {
       
       if (method === "razorpay") {
         const orderRes = await axios.post(
-          "http://localhost:3001/create-order",
+          `${import.meta.env.VITE_API_uRL}/create-order`,
           { amount: totalAmount }
         );
 
@@ -120,7 +120,7 @@ function Payment() {
           handler: async function (response) {
             try {
               const verifyRes = await axios.post(
-                "http://localhost:3001/verify-payment",
+                `${import.meta.env.VITE_API_uRL}/verify-payment`,
                 {
                   razorpay_order_id: orderRes.data.id,
                   razorpay_payment_id: response.razorpay_payment_id,
@@ -144,7 +144,7 @@ function Payment() {
                     email: user?.email,
                   };
 
-                  await axios.post( "http://localhost:3001/payment",
+                  await axios.post( "${import.meta.env.VITE_API_uRL}/payment",
                     paymentData
                   );
                 }
@@ -152,7 +152,7 @@ function Payment() {
                 alert("Payment Successful & Verified");
 
                 await axios.delete(
-                  `http://localhost:3001/cart/user/${localStorage.getItem("userId")}`
+                  `${import.meta.env.VITE_API_uRL}/cart/user/${localStorage.getItem("userId")}`
                 );
 
               
@@ -206,43 +206,29 @@ function Payment() {
       )}
 
       <div className="paymentoption">
-        <input
-          type="radio"
-          name="payment"
-          value="cod"
-          onChange={(e) => setMethod(e.target.value)}
-        />
+        <input type="radio" name="payment"  value="cod"
+          onChange={(e) => setMethod(e.target.value)} />
         <label>Cash on Delivery</label>
       </div>
 
       <div className="paymentoption">
-        <input
-          type="radio"
-          name="payment"
-          value="razorpay"
-          onChange={(e) => setMethod(e.target.value)}
-        />
+        <input type="radio"  name="payment"value="razorpay"
+          onChange={(e) => setMethod(e.target.value)} />
         <label>Razorpay</label>
       </div>
 
       <div className="paymentoption">
         <input
-          type="radio"
-          name="payment"
-          value="upi"
-          onChange={(e) => setMethod(e.target.value)}
-        />
+          type="radio"name="payment" value="upi"
+          onChange={(e) => setMethod(e.target.value)} />
         <label>UPI</label>
       </div>
 
       {method === "upi" && (
         <input
-          type="text"
-          placeholder="Enter UPI ID"
+          type="text" placeholder="Enter UPI ID"
           value={upiId}
-          onChange={(e) => setUpiId(e.target.value)}
-          className="upiinput"
-        />
+          onChange={(e) => setUpiId(e.target.value)} className="upiinput" />
       )}
 
       <button className="paybutton" onClick={handlePayment}>

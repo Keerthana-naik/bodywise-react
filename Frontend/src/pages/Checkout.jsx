@@ -24,7 +24,7 @@ function Checkout() {
 
     if (!userId) return;
 
-    axios.get(`http://localhost:3001/cart/${userId}`)
+    axios.get(`${import.meta.env.VITE_API_uRL}/cart/${userId}`)
       .then((res) => {
         setCart(res.data);
       })
@@ -83,16 +83,16 @@ function Checkout() {
       Final price 
       <p>
         ₹{finalPrice.toFixed(2)} × {item.count}
-      </p>
-    </div> 
+           </p>
+         </div> 
   );
 })} 
 
 
           <h2>Total: ₹{totalPrice.toFixed(2)}</h2>
         </div>
-      </div>
-    </div>
+           </div>
+           </div>
   );
 }
 
