@@ -18,7 +18,10 @@ function Home() {
 
     axios
       .get(url)
-      .then((res) => setProducts(res.data))
+      .then((res) => {
+      console.log(res.data);
+      setProducts(res.data.products);
+  })
       .catch((err) => console.log(err));
   }, [selectedCategory]);
 
@@ -96,7 +99,8 @@ function Home() {
         </div>
 
         <div className="bestgrid">
-          {products.map((product) => (
+          {/* {products.map((product) => ( */}
+          {(products || []).map((product) => (
             <div key={product._id}
               onClick={() => navigate(`/product/${product._id}`)}
             >
