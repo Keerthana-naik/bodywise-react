@@ -27,7 +27,7 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_uRL}/api/admin/dashboard`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`)
       .then(res => {
         console.log("API DATA:", res.data);
         setData(res.data);
