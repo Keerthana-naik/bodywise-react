@@ -1,6 +1,4 @@
 
-
-
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
@@ -25,12 +23,8 @@ function Navbar({ openLogin, openSignup, user, setUser }) {
       <nav className="navbar">
         
         <div className="logo">
-          <img
-            src="/logo.png"
-            alt="Logo"
-            onClick={() => navigate("/")}
-            style={{ cursor: "pointer" }}
-          />
+          <img src="/logo.png" alt="Logo" 
+            onClick={() => navigate("/")} style={{ cursor: "pointer" }}/>
         </div>
 
         <ul className="nav-links">
@@ -62,9 +56,6 @@ function Navbar({ openLogin, openSignup, user, setUser }) {
             <Link to="/ShopAll">Shop All</Link>
           </li>
 
-          
-
-          
           {!user ? (
             <>
               <li onClick={openLogin} style={{ cursor: "pointer" }}>
@@ -85,13 +76,11 @@ function Navbar({ openLogin, openSignup, user, setUser }) {
         <div className="nav-icons">
           <FiSearch
             onClick={() => navigate("/search")}
-            style={{ cursor: "pointer", fontSize: "20px" }}
-          />
+            style={{ cursor: "pointer", fontSize: "20px" }} />
 
           <FaRegUser
             onClick={() => navigate("/Profile")}
-            style={{ cursor: "pointer", fontSize: "20px" }}
-          />
+            style={{ cursor: "pointer", fontSize: "20px" }}/>
 
           <Link to="/Cart">
             <HiOutlineShoppingCart />

@@ -6,7 +6,6 @@ function Footer() {
   return (
     <>
    
-
       <div>
         <footer className="footer">
           <div className="app">

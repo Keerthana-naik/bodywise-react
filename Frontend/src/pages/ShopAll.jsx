@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./ShopAll.css";
@@ -23,8 +21,6 @@ function ShopAll() {
   };
   
 
-
-
   useEffect(() => {
     const url = selectedCategory === "all"
         ? `${import.meta.env.VITE_API_URL}/products`
@@ -38,11 +34,8 @@ function ShopAll() {
   }, [selectedCategory]);
 
   
-
   return (
-    <div>
-
-      
+    <div> 
       <div className="carousel-container">
         <Carousel showDots={true}
           responsive={responsive} autoPlay={true}
@@ -101,8 +94,8 @@ function ShopAll() {
                 <img src={item.imageUpload} alt={item.title} />
                 <h4>{item.title}</h4>
                 <p>₹{item.price}</p>
-                <p> {item.rating}</p>
-                <button>Add</button>
+                <p> {item.rating}⭐</p>
+                <button className="addshop">Add</button>
               </div>
             ))
           )}

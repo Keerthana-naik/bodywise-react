@@ -50,7 +50,7 @@ function Login({ closeModal, setUser }) {
           alert("Login Successful");
 
         } else {
-          alert("No record found");
+          alert("No record found or check your credentials");
         }
       })
       .catch((err) => {
@@ -71,22 +71,13 @@ function Login({ closeModal, setUser }) {
 
         <form onSubmit={handleSubmit}>
           <label>Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <input  type="email"
+            placeholder="Enter your email" required
+            value={email} onChange={(e) => setEmail(e.target.value)}/>
 
           <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <input type="password" placeholder="Enter your password" required 
+            value={password}  onChange={(e) => setPassword(e.target.value)}/>
 
           <button type="submit" className="primary-btn">
             Login

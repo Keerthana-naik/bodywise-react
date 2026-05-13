@@ -96,8 +96,7 @@ function AddProduct() {
           <div>
             <label className="wordings">Quantity</label>
             <br />
-            <input type="number"
-              placeholder="Enter quantity" value={quantity}
+            <input type="number"  placeholder="Enter quantity" value={quantity}
               onChange={(e) => setQuantity(e.target.value)}  required/>
           </div>
 

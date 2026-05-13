@@ -1,104 +1,4 @@
 
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-// import "./Checkout.css";
-
-// function Checkout() {
-//   const [cart, setCart] = useState([]);
-//   const navigate = useNavigate();
-
- 
-//   useEffect(() => {
-//     const buyNowData = JSON.parse(localStorage.getItem("buyNow"));
-
-    
-//     if (buyNowData) {
-//       setCart(buyNowData);
-//       return;
-//     }
-
-  
-//     const userId = localStorage.getItem("userId");
-
-//     if (!userId) return;
-
-//     axios.get(`${import.meta.env.VITE_API_URL}/cart/${userId}`)
-//       .then((res) => {
-//         setCart(res.data);
-//       })
-//       .catch((err) => console.log(err));
-//   }, []);
-
-
-  
-
-//     const GST_RATE = 0.18; 
-    
-//   const totalPrice = cart.reduce((total, item) => {
-//   const price = Number(item.productId?.price || 0);
-//   const gst = price * GST_RATE;
-//   return total + (price + gst) * item.count;
-// }, 0);
-
-
-
-//   return (
-//     <div className="checkout-page">
-//       <h2>Checkout</h2>
-
-//       <div className="checkout-container">
-//         <div className="checkout-form">
-//           <h3>Delivery Details</h3>
-
-//           <p>Click below to add address</p>
-
-//           <button onClick={() => navigate("/address")}>
-//             Place Order
-//           </button>
-//         </div>
-
-//         <div className="checkout-summary">
-//           <h3>Order Summary</h3>
-
-       
-
-//           {cart.map((item, index) => {
-//   const product = item.productId;
-//   if (!product) return null;
-
-//   const price = Number(product.price);
-//   const gstAmount = price * GST_RATE;
-//   const finalPrice = price + gstAmount; 
-
-//   return (
-//     <div key={index} className="summary-item">
-//       <p><strong>{product.title}</strong></p>
-
-//       GST details
-//       <p>Price: ₹{price}</p>
-//       <p>GST (18%): ₹{gstAmount.toFixed(2)}</p>
-
-//       Final price 
-//       <p>
-//         ₹{finalPrice.toFixed(2)} × {item.count}
-//            </p>
-//          </div> 
-//   );
-// })} 
-
-
-//           <h2>Total: ₹{totalPrice.toFixed(2)}</h2>
-//         </div>
-//            </div>
-//            </div>
-//   );
-// }
-
-// export default Checkout;
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -108,48 +8,87 @@ function Checkout() {
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const buyNowData = JSON.parse(localStorage.getItem("buyNow"));
-
-    if (buyNowData) {
-      setCart(buyNowData);
-      return;
-    }
-
-    const userId = localStorage.getItem("userId");
-    if (!userId) return;
-
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/cart/${userId}`)
-      .then((res) => {
-        setCart(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
   const GST_RATE = 0.18;
 
-  // ✅ FIXED TOTAL LOGIC
-  const totalPrice = cart.reduce((total, item) => {
-    const product = item.productData || item.productId || item;
+  useEffect(() => {
+    const loadCart = async () => {
+      const buyNowData = JSON.parse(localStorage.getItem("buyNow"));
 
-    const price = Number(product?.price || 0);
-    const quantity = item.count || item.quantity || 1;
+if (buyNowData) {
 
-    const gst = price * GST_RATE;
+  if (!Array.isArray(buyNowData)) {
+    setCart([{ ...buyNowData, count: 1 }]);
+  }
 
-    return total + (price + gst) * quantity;
+  else {
+    setCart(buyNowData);
+  }
+
+  return;
+} 
+      const kitData = JSON.parse(localStorage.getItem("buildYourKit"));
+      if (kitData && kitData.length > 0) {
+
+        const updatedKit = kitData.map((item) => ({
+          ...item,
+          count: 1,
+        }));
+
+        setCart(updatedKit);
+        return;
+      }
+      
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/cart/${userId}`
+        );
+
+        const updatedCart = res.data.map((item) => ({
+          ...item.productId,
+          count: item.count,
+          cartId: item._id,
+        }));
+        setCart(updatedCart);
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    loadCart();
+  }, []);
+
+
+  const calculateItem = (item) => {
+  const price = Number(item.price || 0);
+  const quantity = item.count || 1;
+  const subtotal = Math.round(price * quantity);
+  const gst = Math.round(subtotal * GST_RATE);
+  const total = Math.round(subtotal + gst);
+
+  return {
+    price,
+    quantity,
+    subtotal,
+    gst,
+    total,
+  };
+};
+  const grandTotal = cart.reduce((sum, item) => {
+    const { total } = calculateItem(item);
+    return sum + total;
   }, 0);
 
   return (
     <div className="checkout-page">
       <h2>Checkout</h2>
-
       <div className="checkout-container">
+
         <div className="checkout-form">
           <h3>Delivery Details</h3>
-
-          <p>Click below to add address</p>
 
           <button onClick={() => navigate("/address")}>
             Place Order
@@ -159,35 +98,30 @@ function Checkout() {
         <div className="checkout-summary">
           <h3>Order Summary</h3>
 
-          {cart.map((item, index) => {
-            const product = item.productData || item.productId || item;
-            if (!product) return null;
+          {cart.map((item) => {
 
-            const price = Number(product?.price || 0);
-            const quantity = item.count || item.quantity || 1;
-
-            const gstAmount = price * GST_RATE;
-            const finalPrice = price + gstAmount;
+            const { price, quantity, subtotal, gst, total } =
+              calculateItem(item);
 
             return (
-              <div key={index} className="summary-item">
+              <div
+                key={item.cartId || item._id || item.title}
+                className="summary-item"
+              >
                 <p>
-                  <strong>{product?.title || "Product"}</strong>
+                  <strong>{item.title}</strong>
                 </p>
-
-                GST details
                 <p>Price: ₹{price}</p>
-                <p>GST (18%): ₹{gstAmount.toFixed(2)}</p>
-
-                Final price
-                <p>
-                  ₹{finalPrice.toFixed(2)} × {quantity}
-                </p>
+                <p>Qty: {quantity}</p>
+                <p>Subtotal: ₹{subtotal}</p>
+               <p>GST (18%): ₹{gst}</p>
+              <strong>Total: ₹{total}</strong>
+                <hr />
               </div>
             );
           })}
-
-          <h2>Total: ₹{totalPrice.toFixed(2)}</h2>
+          
+          <h2>Grand Total: ₹{Math.round(grandTotal)}</h2>
         </div>
       </div>
     </div>

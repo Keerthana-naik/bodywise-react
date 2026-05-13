@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./ManageOrder.css";
+
 
 function ManageOrder() {
   const [orders, setOrders] = useState([]);
@@ -45,8 +45,26 @@ function ManageOrder() {
             <tr key={order._id}>
               <td>{order._id}</td>
 
-              <td>{order.productName}</td>
-              <td>{order.quantity}</td>
+                <td>
+  {order.productName ? (
+    order.productName
+  ) : (
+    order.products?.map((item, index) => (
+      <div key={index}>{item.name}</div>
+    ))
+  )}
+</td>
+
+<td>
+  {order.quantity ? (
+    order.quantity
+  ) : (
+    order.products?.map((item, index) => (
+      <div key={index}>{item.quantity}</div>
+    ))
+  )}
+</td>
+
               <td>₹. {order.total}</td>
 
               <td>
@@ -61,13 +79,9 @@ function ManageOrder() {
                 <button onClick={() => updateStatus(order._id, "Shipped")}>
                   Shipped
                 </button>
-
-
                 <button onClick={() => updateStatus(order._id, "Delivered")}>
                   Delivered
                 </button>
-
-
                 <button onClick={() => deleteOrder(order._id)}>Delete</button>
               </td>
             </tr>

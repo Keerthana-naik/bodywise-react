@@ -1,16 +1,12 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import "./Orderpage.css";
-
 function OrderPage() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-
     if (!user) {
       console.log("User not logged in");
       return;
@@ -35,17 +31,41 @@ function OrderPage() {
           <p className="no-orders">No orders found</p>
         ) : (
           orders.map((order, index) => (
+            
             <div key={index} className="order-card">
 
               <p>
                 <strong>Order ID:</strong> {order._id}
               </p>
-               <p>
-                <strong>Product:</strong> {order.productName}
-              </p>
-             <p>
-              <strong>Quantity:</strong> {order.quantity}
-             </p>
+              
+<p>
+  <strong>Product:</strong>{" "}
+
+  {order.productName ? (
+    order.productName
+  ) : (
+    order.products?.map((item, index) => (
+      <span key={index}>
+        {item.name}
+        {index !== order.products.length - 1 ? ", " : ""}
+      </span>
+    ))
+  )}
+</p>
+<p>
+  <strong>Quantity:</strong>{" "}
+
+  {order.quantity ? (
+    order.quantity
+  ) : (
+    order.products?.map((item, index) => (
+      <span key={index}>
+        {item.quantity}
+        {index !== order.products.length - 1 ? ", " : ""}
+      </span>
+    ))
+  )}
+</p>
             <p>
              <strong>Total:</strong> ₹{order.total}
             </p>
@@ -70,7 +90,6 @@ function OrderPage() {
                 <strong>Date:</strong>{" "}
                 {new Date(order.createdAt).toLocaleString()}
               </p>
-
             </div>
           ))
         )}

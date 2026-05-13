@@ -18,7 +18,6 @@ function Category() {
   };
 
    const [products, setProducts] = useState([]);
-
   useEffect(() => {axios .get(`${import.meta.env.VITE_API_URL}/products/category/${type}`)
       .then((res) => {
         setProducts(res.data);
@@ -48,11 +47,8 @@ function Category() {
 <div className="card">
             <img className="slide" src="/hairslide5.png" alt="slide5" />
           </div>
-
-          
-           </Carousel>
      
-
+           </Carousel>
     
       <h2>{type.toUpperCase()} PRODUCTS</h2>
       
@@ -62,9 +58,7 @@ function Category() {
             <div key={product._id}
               onClick={() => navigate(`/product/${product._id}`)}
             >
-              <img
-                // src={`http://localhost:3001/uploads/${product.imageUpload}`}
-                src={product.imageUpload}
+              <img src={product.imageUpload}
                 alt={product.title} style={{ width: "200px" }}/>
               <h3>{product.title}</h3>
                    <p>Price: {product.price}</p>
@@ -73,8 +67,6 @@ function Category() {
             </div>
           ))}
         </div>
-
-
 
     </div>
   );

@@ -52,7 +52,7 @@
 
 .dashcard {
   padding: 20px;
-  background: linear-gradient(to right, #4facfe, #00f2fe);
+  background: rgb(0, 92, 128);
   color: white;
   border-radius: 10px;
   text-align: center;

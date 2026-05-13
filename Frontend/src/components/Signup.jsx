@@ -14,24 +14,31 @@ function Signup({ closeModal, openLogin }) {
   e.preventDefault();
 
   axios.post(`${import.meta.env.VITE_API_URL}/register`, { name, email, password })
-    .then((result) => {
-      console.log(result);
+ 
+.then((result) => {
+  console.log(result);
 
-      alert("Signup successful!");
+  if (result.data.status === "success") {
+    alert("Signup successful!please login");
 
-      
-      localStorage.setItem("user", JSON.stringify(result.data));
-      localStorage.setItem("userId", result.data._id);
-     
+    localStorage.setItem("user", JSON.stringify(result.data.user));
+    localStorage.setItem("userId", result.data.user._id);
 
-      closeModal();
-      navigate("/");
-    })
+    closeModal();
+    navigate("/");
+
+  } else {
+ alert(result.data.message);
+
+  }
+})
     .catch((err) => {
       console.log(err);
       alert("Signup failed");
     });
 };
+
+
   const navigate = useNavigate();
   return (
     <div className="modal">

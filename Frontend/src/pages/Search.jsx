@@ -53,11 +53,9 @@ function Search() {
             onClick={() => navigate(`/product/${item._id}`)}
           >
             <img
-              // src={`http://localhost:3001/uploads/${item.imageUpload}`}
-              
+           
                src={item.imageUpload}
-              alt={item.title}
-            />
+              alt={item.title} />
                 <h4>{item.title}</h4>
                  <p>₹{item.price}</p>
           </div>
@@ -67,13 +65,12 @@ function Search() {
       <h2>Popular searches</h2>
       <div className="PopularButtons">
         <button onClick={() => navigate("/search?query=sunscreen")}>Sunscreen </button>
-        <button onClick={() => navigate("/search?query=hairfall")}> Hairfall</button>
-        <button onClick={() => navigate("/search?query=acne")}>  Body Acne </button>
-        <button onClick={() => navigate("/search?query=under")}>  Underarm odour </button>
-        <button onClick={() => navigate("/search?query=heels")}> Cracked Heels </button>
+        <button onClick={() => navigate("/search?query=hair")}> Hairfall</button>
+        <button onClick={() => navigate("/search?query=body")}>  Body Acne </button>
+        
         <button onClick={() => navigate("/search?query=drandruff")}> Dandruff</button>
-        <button onClick={() => navigate("/search?query=dry")}>Dry Skin</button>
-        <button onClick={() => navigate("/search?query=bodywash")}>  Bodywash</button>
+        
+        
       </div>
       
       

@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -7,89 +6,85 @@ import "./Cart.css";
 import { useNavigate } from "react-router-dom";
 
 function Cart() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState([]);
-
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await axios.get(  `${import.meta.env.VITE_API_URL}/cart/${userId}` );
-
-        
-        const updatedCart = res.data.map((item) => ({
-          ...item.productId, 
-          count: item.count,
-          cartId: item._id, 
-        }));
-
-        setCart(updatedCart);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchCart();
   }, []);
 
-  
+  const fetchCart = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/cart/${userId}`
+      );
+
+      
+      const updatedCart = res.data.map((item) => ({
+        ...item.productId,
+        count: item.count,
+        cartId: item._id,
+      }));
+
+      setCart(updatedCart);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const removeItem = async (index) => {
     const item = cart[index];
 
     try {
-      await axios.delete( `${import.meta.env.VITE_API_URL}/cart/${item.cartId}`
-  );
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/cart/${item.cartId}`
+      );
 
-      const updatedCart = cart.filter((_, i) => i !== index);
-      setCart(updatedCart);
+      setCart(cart.filter((_, i) => i !== index));
     } catch (err) {
       console.log(err);
     }
   };
 
-  
   const increaseQty = async (index) => {
     const item = cart[index];
 
     try {
-      const res = await axios.put( `${import.meta.env.VITE_API_URL}/cart/${item.cartId}`,
-        {
-          count: item.count + 1,
-        }
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_URL}/cart/${item.cartId}`,
+        { count: item.count + 1 }
       );
 
-      const updatedCart = cart.map((c, i) =>
+      const updated = cart.map((c, i) =>
         i === index ? { ...c, count: res.data.count } : c
       );
 
-      setCart(updatedCart);
+      setCart(updated);
     } catch (err) {
       console.log(err);
     }
   };
-
 
   const decreaseQty = async (index) => {
     const item = cart[index];
     if (item.count <= 1) return;
 
     try {
-      const res = await axios.put(  `${import.meta.env.VITE_API_URL}/cart/${item.cartId}`,
-        {
-          count: item.count - 1,
-        }
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_URL}/cart/${item.cartId}`,
+        { count: item.count - 1 }
       );
 
-      const updatedCart = cart.map((c, i) =>
+      const updated = cart.map((c, i) =>
         i === index ? { ...c, count: res.data.count } : c
       );
 
-      setCart(updatedCart);
+      setCart(updated);
     } catch (err) {
       console.log(err);
     }
   };
-
 
   const totalPrice = cart.reduce(
     (total, item) => total + Number(item.price) * item.count,
@@ -106,7 +101,7 @@ function Cart() {
         <>
           <div className="cartcontainer">
             {cart.map((item, index) => (
-              <div className="cartcard" key={index}>
+              <div className="cartcard" key={item.cartId}>
                 <img src={item.imageUpload} alt={item.title} />
 
                 <div className="cartdetails">
@@ -114,19 +109,14 @@ function Cart() {
                   <p>Price: ₹{item.price}</p>
 
                   <div className="qty">
-                    <button onClick={() => decreaseQty(index)}>
-                      -
-                    </button>
+                    <button onClick={() => decreaseQty(index)}>-</button>
                     <span>{item.count}</span>
-                    <button onClick={() => increaseQty(index)}>
-                      +
-                    </button>
+                    <button onClick={() => increaseQty(index)}>+</button>
                   </div>
 
                   <button
                     className="removebtn"
-                    onClick={() => removeItem(index)}
-                  >
+                    onClick={() => removeItem(index)} >
                     Remove
                   </button>
                 </div>
@@ -135,13 +125,19 @@ function Cart() {
           </div>
 
           <div className="carttotal">
-            <h3>Total: ₹{totalPrice}</h3>
+            <h3>Total: ₹{totalPrice.toFixed(2)}</h3>
 
-            <Link to="/checkout">
-              <button className="checkout-btn">
-                Proceed to Checkout
-              </button>
-            </Link>
+       
+     <button className="checkout-btn"
+  onClick={() => {  
+    localStorage.removeItem("buyNow");
+    localStorage.removeItem("buildYourKit");
+
+    navigate("/checkout");
+  }}
+>
+  Proceed to Checkout
+</button>
           </div>
         </>
       )}

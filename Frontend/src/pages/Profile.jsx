@@ -37,7 +37,7 @@ return (
         <div className="profileboxes">
             
             <div className="box" onClick={() => navigate("/Orderpage")}>Order</div>
-            <div className="box">Address</div>
+            
       
 
         </div>
